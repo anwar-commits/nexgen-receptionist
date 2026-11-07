@@ -17,3 +17,6 @@ mobile/android/
 *.p12
 *.key
 *.mobileprovision
+
+# Vercel
+.vercel/
