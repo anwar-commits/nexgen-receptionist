@@ -18,7 +18,10 @@ export async function syncAgent(): Promise<{ synced: boolean; error?: string }> 
   try {
     const s = await getSettings();
     const agent = await getAgent();
-    const currentPrompt = agent.conversation_config.agent?.prompt ?? {};
+    // ElevenLabs returns `tools` alongside `tool_ids` but rejects a PATCH that contains both.
+    const { tools: _tools, ...currentPrompt } = (agent.conversation_config.agent?.prompt ?? {}) as NonNullable<
+      NonNullable<typeof agent.conversation_config.agent>["prompt"]
+    > & { tools?: unknown };
     const builtIns = { ...(currentPrompt.built_in_tools ?? {}) } as Record<string, unknown>;
 
     builtIns.end_call = builtIns.end_call ?? {
